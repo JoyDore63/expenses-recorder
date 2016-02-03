@@ -52,6 +52,4 @@ class Expense(models.Model):
         )
 
     class Meta:
-        ordering = [
-            'user', 'category', 'purchase_date', 'price', 'description'
-        ]
+        ordering = ['purchase_date', 'description']
