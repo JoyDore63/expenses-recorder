@@ -29,4 +29,4 @@ class Expense(models.Model):
     category = models.ForeignKey(Category)
     price = models.DecimalField(max_digits=4, decimal_places=2)
     # Include 'human-readable' name for purchase date
-    purchase_date = models.DateTimeField('date of purchase')
+    purchase_date = models.DateField('date of purchase')
