@@ -1,10 +1,23 @@
 <h1>Expenses List</h1>
 {% if recent_expenses_list %}
-    <ul>
+    <table border=1>
+        <tr>
+            <th>User</th>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Item</th>
+            <th>Price</th>
+        </tr>
     {% for expense in recent_expenses_list %}
-        <li>{{ expense.description }}</li>
+        <tr>
+            <td>{{ expense.user }}</td>
+            <td>{{ expense.purchase_date }}</td>
+            <td>{{ expense.category }}
+            <td>{{ expense.description }}</td>
+            <td>{{ expense.price }}</td>
+        </tr>
     {% endfor %}
-    </ul>
+    </table>
 {% else %}
     <p>No expenses are available.</p>
 {% endif %}

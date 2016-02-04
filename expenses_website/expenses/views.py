@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.views import generic
 
 from .models import Expense
@@ -11,3 +10,8 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         '''Return the last 20 expenses'''
         return Expense.objects.order_by('-purchase_date')[:20]
+
+
+class AddView(generic.View):
+    model = Expense
+    template_name = 'expenses/add.html'
