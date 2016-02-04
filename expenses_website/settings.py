@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'expenses_website.expenses',
+    'zap',
 ]
 
 MIDDLEWARE_CLASSES = [
