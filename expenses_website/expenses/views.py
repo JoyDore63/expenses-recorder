@@ -1,4 +1,6 @@
 from django.views import generic
+from django.http import HttpResponse
+from expenses_website.expenses.forms import AddExpenseForm
 
 from .models import Expense
 
@@ -13,5 +15,9 @@ class IndexView(generic.ListView):
 
 
 class AddView(generic.View):
-    model = Expense
     template_name = 'expenses/add.html'
+    form_class =  AddExpenseForm
+
+    def get(self, request):
+        # TODO
+        return HttpResponse('add result')
