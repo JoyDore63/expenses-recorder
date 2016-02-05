@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^add/$', views.AddView.as_view(), name='add'),
+    url(r'^add_expense/$', views.add_expense, name='add_expense'),
+    url(r'^(?P<pk>[0-9]+)/result/$', views.ResultView.as_view(), name='result')
 ]
