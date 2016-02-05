@@ -8,6 +8,7 @@ from .forms import AddExpenseForm
 
 
 class IndexView(generic.ListView):
+    model = Expense
     template_name = 'expenses/index.html'
     context_object_name = 'recent_expenses_list'
 
