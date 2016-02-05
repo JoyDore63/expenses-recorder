@@ -1,1 +1,4 @@
 *.pyc
+# Wing IDE stuff
+*.wpr
+*.wpu
