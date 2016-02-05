@@ -1,4 +1,5 @@
-from django.views import generic
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
@@ -7,7 +8,7 @@ from .models import Expense, User, Category
 from .forms import AddExpenseForm
 
 
-class IndexView(generic.ListView):
+class IndexView(ListView):
     model = Expense
     template_name = 'expenses/index.html'
     context_object_name = 'recent_expenses_list'
@@ -17,15 +18,12 @@ class IndexView(generic.ListView):
         return Expense.objects.order_by('-purchase_date')[:20]
 
 
-# class AddView(generic.View):
-#    template_name = 'expenses/add.html'
-#    form_class =  AddExpenseForm
-#
-#    def get(self, request):
-#        # TODO
-#        return HttpResponse('add result')
+class ExpenseCreate(CreateView):
+    model = Expense
+    fields = ['user', 'category', 'purchase_date', 'description',  'price']
+    
 
-class ResultView(generic.DetailView):
+class ResultView(DetailView):
     model = Expense
     template_name = 'expenses/result.html'
 
