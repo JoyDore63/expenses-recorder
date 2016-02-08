@@ -3,12 +3,13 @@ from django.views.generic.edit import CreateView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Expense, User, Category
 from .forms import AddExpenseForm
 
 
-class IndexView(ListView):
+class IndexView(LoginRequiredMixin, ListView):
     model = Expense
     template_name = 'expenses/index.html'
     context_object_name = 'recent_expenses_list'
@@ -18,7 +19,7 @@ class IndexView(ListView):
         return Expense.objects.order_by('-purchase_date')[:20]
 
 
-class ExpenseCreate(CreateView):
+class ExpenseCreate(LoginRequiredMixin, CreateView):
     model = Expense
     fields = ['user', 'category', 'purchase_date', 'description', 'price']
 
@@ -35,7 +36,7 @@ class ExpenseCreate(CreateView):
 #        super(ExpenseCreate, self).get(self, request)
 
 
-class ResultView(DetailView):
+class ResultView(LoginRequiredMixin, DetailView):
     model = Expense
     template_name = 'expenses/result.html'
 

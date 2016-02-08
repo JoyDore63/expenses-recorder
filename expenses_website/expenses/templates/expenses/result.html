@@ -1,3 +1,7 @@
+{% extends "expenses/base.html" %}
+
+{% block content %}
+
 <h1>Result</h1>
 
 Added expense: {{ expense.description }}
@@ -5,3 +9,5 @@ Added expense: {{ expense.description }}
 <br/>
 <br/>
 <a href="{% url 'expenses:create' %}">Enter another</a>
+
+{% endblock %}
