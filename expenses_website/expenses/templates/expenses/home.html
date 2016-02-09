@@ -1,0 +1,10 @@
+{% extends "expenses/base.html" %}
+
+{% block content %}
+
+<h1>Expenses</h1>
+
+<br/>
+<a href="{% url 'expenses:create' %}">Create an Expense</a>
+
+{% endblock %}

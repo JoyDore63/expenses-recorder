@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -9,9 +9,13 @@ from .models import Expense, User, Category
 from .forms import AddExpenseForm
 
 
-class IndexView(LoginRequiredMixin, ListView):
+class HomeView(TemplateView):
+    template_name = 'expenses/home.html'
+
+
+class ExpenseListView(LoginRequiredMixin, ListView):
     model = Expense
-    template_name = 'expenses/index.html'
+    template_name = 'expenses/list.html'
     context_object_name = 'recent_expenses_list'
 
     def get_queryset(self):
