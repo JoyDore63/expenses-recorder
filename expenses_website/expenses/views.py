@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -9,9 +9,13 @@ from .models import Expense, User, Category
 from .forms import AddExpenseForm
 
 
-class IndexView(LoginRequiredMixin, ListView):
+class HomeView(TemplateView):
+    template_name = 'expenses/home.html'
+
+
+class ExpenseListView(LoginRequiredMixin, ListView):
     model = Expense
-    template_name = 'expenses/index.html'
+    template_name = 'expenses/list.html'
     context_object_name = 'recent_expenses_list'
 
     def get_queryset(self):
@@ -23,17 +27,20 @@ class ExpenseCreate(LoginRequiredMixin, CreateView):
     model = Expense
     fields = ['user', 'category', 'purchase_date', 'description', 'price']
 
+    # TODO create separate get_success_url method - overriding std one
+
     def form_valid(self, form):
         expense = get_expense_from_form(form)
         expense.save()
         self.success_url = reverse('expenses:result', args=(expense.pk,))
         return super(ExpenseCreate, self).form_valid(form)
 
+#  Super call amended by Dave, from    get(self, request)
 #    def get(self, request):
-#        super(ExpenseCreate, self).get(self, request)
+#        super(ExpenseCreate, self).get(request)
 
 #    def post(self, request):
-#        super(ExpenseCreate, self).get(self, request)
+#        super(ExpenseCreate, self).get(request)
 
 
 class ResultView(LoginRequiredMixin, DetailView):
