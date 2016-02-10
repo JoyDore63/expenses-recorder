@@ -2,3 +2,4 @@
 # Wing IDE stuff
 *.wpr
 *.wpu
+debug.log
