@@ -9,7 +9,7 @@ from .models import Expense, User, Category
 from .forms import AddExpenseForm
 
 
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'expenses/home.html'
 
 
