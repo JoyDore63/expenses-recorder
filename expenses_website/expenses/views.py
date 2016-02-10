@@ -25,15 +25,15 @@ class ExpenseListView(LoginRequiredMixin, ListView):
 
 class ExpenseCreate(LoginRequiredMixin, CreateView):
     model = Expense
-    fields = ['user', 'category', 'purchase_date', 'description', 'price']
+    fields = ['category', 'purchase_date', 'description', 'price']
 
     # TODO create separate get_success_url method - overriding std one
 
     def form_valid(self, form):
-        expense = get_expense_from_form(form)
+        expense = get_expense_from_form(self.request.user.username, form)
         expense.save()
         self.success_url = reverse('expenses:result', args=(expense.pk,))
-        return super(ExpenseCreate, self).form_valid(form)
+        return HttpResponseRedirect(self.success_url)
 
 #  Super call amended by Dave, from    get(self, request)
 #    def get(self, request):
@@ -52,7 +52,7 @@ def add_expense(request):
     if request.method == 'POST':
         form = AddExpenseForm(request.POST)
         if form.is_valid():
-            expense = get_expense_from_form(form)
+            expense = get_expense_from_form(request.user.username, form)
             expense.save()
             return HttpResponseRedirect(
                 reverse('expenses:result', args=(expense.pk,))
@@ -63,8 +63,8 @@ def add_expense(request):
     return render(request, 'expenses/add_expense.html', {'form': form})
 
 
-def get_expense_from_form(form):
-    user = form.cleaned_data['user']
+def get_expense_from_form(user, form):
+    user = user
     category = Category.objects.get(
         description=form.cleaned_data['category']
     )
