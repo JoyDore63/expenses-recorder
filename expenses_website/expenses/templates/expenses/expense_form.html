@@ -4,6 +4,8 @@
 
 <h1>Create Expense</h1>
 
+<p>User: {{ user.username }}</p>
+
 <form action="" method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Create">

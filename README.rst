@@ -9,14 +9,10 @@ Solution:
 Model:
 
     Expense
-        User
         Description
         Category
 
     Category
-        Name
-
-    User
         Name
 
 

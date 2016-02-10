@@ -6,20 +6,10 @@ from django.db import models
 '''
 The User can create an Expense which will be in a category.
 For example,
-   User: Tony
+   User: Tony (from login)
    Category: Treats
    Expense: Coffee
 '''
-
-
-class User(models.Model):
-    name = models.CharField(max_length=6)
-
-    def __unicode__(self):
-        return u'{}'.format(self.name)
-
-    class Meta:
-        ordering = ['name']
 
 
 class Category(models.Model):
@@ -35,7 +25,7 @@ class Category(models.Model):
 
 class Expense(models.Model):
     description = models.CharField(max_length=120)
-    user = models.ForeignKey(User)
+    user = models.CharField(max_length=10)
     category = models.ForeignKey(Category)
     price = models.DecimalField(max_digits=4, decimal_places=2)
     # Include 'human-readable' name for purchase date
