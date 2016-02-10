@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Expense, User, Category
+from .models import Expense, Category
 from .forms import AddExpenseForm
 
 
@@ -64,7 +64,7 @@ def add_expense(request):
 
 
 def get_expense_from_form(form):
-    user = User.objects.get(name=form.cleaned_data['user'])
+    user = form.cleaned_data['user']
     category = Category.objects.get(
         description=form.cleaned_data['category']
     )
