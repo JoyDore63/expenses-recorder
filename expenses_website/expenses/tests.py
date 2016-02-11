@@ -2,6 +2,7 @@ import logging
 
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.utils import timezone
 
@@ -10,8 +11,35 @@ from .models import Category, Expense
 
 logger = logging.getLogger(__name__)
 
+
+def get_category():
+    return Category.objects.create(description='Treat')
+
+
 # TODO Valid data tests
 # TODO Price is within valid range
+class ModelValidationTests(TestCase):
+
+    def test_price_negative_validation(self):
+        '''
+        If the price is negative shouldn't be able to create an expense
+        '''
+        with self.assertRaises(ValidationError):
+            e = Expense(
+                user='joy',
+                category=get_category(),
+                purchase_date=timezone.now(),
+                description='Coffee',
+                price=-0.1
+            )
+            logger.debug('expense created '+e.description)
+            # Expense.objects.create(
+                #user='joy',
+                # category=get_category(),
+                # purchase_date=timezone.now(),
+                # description='Coffee',
+                # price=-0.1
+                #)
 
 
 # List view tests
@@ -33,11 +61,9 @@ class ListViewTests(TestCase):
         '''
         If an expense exists it should be displayed
         '''
-        category = Category.objects.create(description='Treat')
-        date = timezone.now()
         expense = Expense.objects.create(user='joy',
-                                         category=category,
-                                         purchase_date=date,
+                                         category=get_category(),
+                                         purchase_date=timezone.now(),
                                          description='Coffee',
                                          price=2.2)
         response = self.client.get(reverse('expenses:list'))

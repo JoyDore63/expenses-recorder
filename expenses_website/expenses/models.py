@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.core.validators import DecimalValidator, MinValueValidator
 
 
 '''
@@ -27,7 +28,12 @@ class Expense(models.Model):
     description = models.CharField(max_length=120)
     user = models.CharField(max_length=10)
     category = models.ForeignKey(Category)
-    price = models.DecimalField(max_digits=4, decimal_places=2)
+    price = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
+        validators=[DecimalValidator(4, 2),
+                    MinValueValidator(limit_value=0.01)]
+    )
     # Include 'human-readable' name for purchase date
     purchase_date = models.DateField('date of purchase')
 
