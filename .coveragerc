@@ -1,0 +1,9 @@
+[run]
+source = expenses_website
+branch = True
+
+[report]
+omit = 
+    */selenium_tests*
+    */migrations/*
+    *.rst
