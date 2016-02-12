@@ -12,12 +12,11 @@ logger = logging.getLogger(__name__)
 OK = 200
 MOVED = 301
 REDIRECT = 302
+test_category = Category.objects.create(description='Treat')
+purchase_date = timezone.now()
 
 
-def get_category():
-    return Category.objects.create(description='Treat')
-
-
+# Used for tests on the logged in test cases
 class LoggedInTestBase(TestCase):
     def setUp(self):
         self.client = Client()
@@ -31,11 +30,11 @@ class ExpenseFormTests(LoggedInTestBase):
 
     def test_post_creates_expense(self):
         '''
-        Post of valid data should create an expensefirst, second, msg=None
+        Post of valid data should create an expense
         '''
         response = self.client.post('/expense_form/',
                                     {'user': 'joy',
-                                     'category': get_category(),
+                                     'category': test_category,
                                      'purchase_date': timezone.now(),
                                      'description': 'Flapjack',
                                      'price': 1.5, })
@@ -43,16 +42,41 @@ class ExpenseFormTests(LoggedInTestBase):
 
     def test_expense_not_created_with_negative_price(self):
         '''
-        Post of data with negative prices should faile
+        Post of data with negative price should fail
         '''
         response = self.client.post('/expense_form',
                                     {'user': 'joy',
-                                     'category': get_category(),
+                                     'category': test_category,
                                      'purchase_date': timezone.now(),
                                      'description': 'Refund',
                                      'price': -0.01, })
         self.assertEquals(response.status_code, MOVED)
 
+    def test_duplicate_expense_not_created(self):
+        '''
+        Post of duplicate data should fail
+        '''
+        expense = Expense.objects.create(user='joy',
+                                                 category=test_category,
+                                                 purchase_date=purchase_date,
+                                                 description='Coffee',
+                                                 price=2.2)
+        response = self.client.post('/expense_form/',
+                                    {'user': 'joy',
+                                     'category': test_category,
+                                     'purchase_date': purchase_date,
+                                     'description': 'Coffee',
+                                     'price': 2.2, })
+        logger.debug('response after post:'+repr(response))
+        #self.assertContains(response, 'Duplicate data not allowed')
+        response = self.client.get(reverse('expenses:list'))
+        logger.debug('response after get:'+repr(response))
+        logger.debug('response type is:'+repr(type(response)))
+        # context appears not to be there!
+        #logger.debug('reponse.context'+repr(response.context))
+        #self.assertEqual(len(response.context['expense']), 1)
+        self.assertContains(response, 'Duplicate data not allowed')
+        
 
 # List view tests
 class ListViewTests(LoggedInTestBase):
@@ -69,7 +93,7 @@ class ListViewTests(LoggedInTestBase):
         If an expense exists it should be displayed
         '''
         expense = Expense.objects.create(user='joy',
-                                         category=get_category(),
+                                         category=test_category,
                                          purchase_date=timezone.now(),
                                          description='Coffee',
                                          price=2.2)

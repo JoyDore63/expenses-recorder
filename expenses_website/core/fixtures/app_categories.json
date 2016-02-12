@@ -1,1 +1,23 @@
-[{"model": "expenses.category", "pk": 1, "fields": {"description": "Lunch"}}, {"model": "expenses.category", "pk": 2, "fields": {"description": "Breakfast"}}, {"model": "expenses.category", "pk": 3, "fields": {"description": "Treat"}}]
+[
+{
+    "model": "expenses.category",
+    "pk": "Breakfast",
+    "fields": {
+        "description": "Breakfast from shop or eating out"
+    }
+},
+{
+    "model": "expenses.category",
+    "pk": "Lunch",
+    "fields": {
+        "description": "Lunch from shop or eating out"
+    }
+},
+{
+    "model": "expenses.category",
+    "pk": "Treat",
+    "fields": {
+        "description": "Snacks"
+    }
+}
+]
