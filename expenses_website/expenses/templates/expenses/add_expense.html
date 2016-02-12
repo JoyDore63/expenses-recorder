@@ -1,7 +1,0 @@
-<h1>Add Expense</h1>
-
-<form action="/expenses/add_expense/" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save"/>
-</form>

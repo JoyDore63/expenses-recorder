@@ -1,12 +1,10 @@
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Expense, Category
-from .forms import AddExpenseForm
 
 
 class HomeView(LoginRequiredMixin, TemplateView):
@@ -46,21 +44,6 @@ class ExpenseCreate(LoginRequiredMixin, CreateView):
 class ResultView(LoginRequiredMixin, DetailView):
     model = Expense
     template_name = 'expenses/result.html'
-
-
-def add_expense(request):
-    if request.method == 'POST':
-        form = AddExpenseForm(request.POST)
-        if form.is_valid():
-            expense = get_expense_from_form(request.user.username, form)
-            expense.save()
-            return HttpResponseRedirect(
-                reverse('expenses:result', args=(expense.pk,))
-            )
-    else:
-        form = AddExpenseForm()
-
-    return render(request, 'expenses/add_expense.html', {'form': form})
 
 
 def get_expense_from_form(user, form):

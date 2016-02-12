@@ -2,7 +2,6 @@ import logging
 
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
-from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.utils import timezone
 
@@ -10,45 +9,53 @@ from .models import Category, Expense
 
 
 logger = logging.getLogger(__name__)
+OK = 200
+MOVED = 301
+REDIRECT = 302
 
 
 def get_category():
     return Category.objects.create(description='Treat')
 
 
-# TODO Valid data tests
-# TODO Price is within valid range
-class ModelValidationTests(TestCase):
-
-    def test_price_negative_validation(self):
-        '''
-        If the price is negative shouldn't be able to create an expense
-        '''
-        with self.assertRaises(ValidationError):
-            e = Expense(
-                user='joy',
-                category=get_category(),
-                purchase_date=timezone.now(),
-                description='Coffee',
-                price=-0.1
-            )
-            logger.debug('expense created '+e.description)
-            # Expense.objects.create(
-                #user='joy',
-                # category=get_category(),
-                # purchase_date=timezone.now(),
-                # description='Coffee',
-                # price=-0.1
-                #)
-
-
-# List view tests
-class ListViewTests(TestCase):
-
+class LoggedInTestBase(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user('joy', 'joy@test.com', 'password')
         self.client.login(username='joy', password='password')
+
+
+# Validation tests are here.
+# Validations added to model are not called when models are used directly
+class ExpenseFormTests(LoggedInTestBase):
+
+    def test_post_creates_expense(self):
+        '''
+        Post of valid data should create an expensefirst, second, msg=None
+        '''
+        response = self.client.post('/expense_form/',
+                                    {'user': 'joy',
+                                     'category': get_category(),
+                                     'purchase_date': timezone.now(),
+                                     'description': 'Flapjack',
+                                     'price': 1.5, })
+        self.assertEqual(response.status_code, OK)
+
+    def test_expense_not_created_with_negative_price(self):
+        '''
+        Post of data with negative prices should faile
+        '''
+        response = self.client.post('/expense_form',
+                                    {'user': 'joy',
+                                     'category': get_category(),
+                                     'purchase_date': timezone.now(),
+                                     'description': 'Refund',
+                                     'price': -0.01, })
+        self.assertEquals(response.status_code, MOVED)
+
+
+# List view tests
+class ListViewTests(LoggedInTestBase):
 
     def test_list_view_with_no_expenses(self):
         '''
@@ -67,15 +74,11 @@ class ListViewTests(TestCase):
                                          description='Coffee',
                                          price=2.2)
         response = self.client.get(reverse('expenses:list'))
-        logger.debug('boo!')
         self.assertContains(response, expense.description)
 
 
 # Login required tests
 class LoginRequiredTests(TestCase):
-
-    REDIRECT = 302
-    OK = 200
 
     def setUp(self):
         self.client = Client()
@@ -86,7 +89,7 @@ class LoginRequiredTests(TestCase):
         The home page should not be displayed if the user is not logged in
         '''
         response = self.client.get(reverse('expenses:home'))
-        self.assertEqual(response.status_code, self.REDIRECT)
+        self.assertEqual(response.status_code, REDIRECT)
 
     def test_home_page_logged_in(self):
         '''
@@ -94,4 +97,4 @@ class LoginRequiredTests(TestCase):
         '''
         self.client.login(username='joy', password='password')
         response = self.client.get(reverse('expenses:home'))
-        self.assertEqual(response.status_code, self.OK)
+        self.assertEqual(response.status_code, OK)
