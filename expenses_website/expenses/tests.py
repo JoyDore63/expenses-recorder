@@ -4,6 +4,7 @@ from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.db import IntegrityError
 
 from .models import Category, Expense
 
@@ -56,27 +57,18 @@ class ExpenseFormTests(LoggedInTestBase):
         '''
         Post of duplicate data should fail
         '''
-        expense = Expense.objects.create(user='joy',
-                                                 category=test_category,
-                                                 purchase_date=purchase_date,
-                                                 description='Coffee',
-                                                 price=2.2)
-        response = self.client.post('/expense_form/',
-                                    {'user': 'joy',
-                                     'category': test_category,
-                                     'purchase_date': purchase_date,
-                                     'description': 'Coffee',
-                                     'price': 2.2, })
-        logger.debug('response after post:'+repr(response))
-        #self.assertContains(response, 'Duplicate data not allowed')
-        response = self.client.get(reverse('expenses:list'))
-        logger.debug('response after get:'+repr(response))
-        logger.debug('response type is:'+repr(type(response)))
-        # context appears not to be there!
-        #logger.debug('reponse.context'+repr(response.context))
-        #self.assertEqual(len(response.context['expense']), 1)
-        self.assertContains(response, 'Duplicate data not allowed')
-        
+        Expense.objects.create(user='joy',
+                               category=test_category,
+                               purchase_date=purchase_date,
+                               description='Coffee',
+                               price=2.2)
+        with self.assertRaises(IntegrityError):
+            Expense.objects.create(user='joy',
+                                   category=test_category,
+                                   purchase_date=purchase_date,
+                                   description='Coffee',
+                                   price=2.2)
+
 
 # List view tests
 class ListViewTests(LoggedInTestBase):
