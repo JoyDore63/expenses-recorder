@@ -4,11 +4,13 @@
 
 <h1>Create Expense</h1>
 
+<body id="create_expense">
 <p class="lead">User: {{ user.username }}</p>
 
 <form action="" method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Create">
 </form>
+</body>
 
 {% endblock %}

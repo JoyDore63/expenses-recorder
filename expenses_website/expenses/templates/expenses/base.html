@@ -12,7 +12,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-
+    <link rel="stylesheet" type="text/css" href="{% static 'expenses/style.css' %}">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -20,7 +20,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body>
+
     <div class="container-fluid">
         {% include 'expenses/body.html' %}
         {% block content %}{% endblock %}
@@ -30,5 +30,5 @@
         <!-- Include all compiled plugins (below), or include individual files as neeed -->
         <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
     </div>
-</body>
+
 </html>
