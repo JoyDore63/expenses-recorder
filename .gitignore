@@ -4,3 +4,4 @@
 *.wpu
 debug.log
 .htmlcov
+htmlcov

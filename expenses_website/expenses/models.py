@@ -16,6 +16,8 @@ For example,
 class Category(models.Model):
     description = models.CharField(max_length=30)
 
+    # Helper for testing and debugging, as recommended by Alex2
+    # This is also used on the auto-generated expense_form
     def __unicode__(self):
         return u'{}'.format(self.description)
 
@@ -37,6 +39,7 @@ class Expense(models.Model):
     # Include 'human-readable' name for purchase date
     purchase_date = models.DateField('date of purchase')
 
+    # Helper for testing and debugging, as recommended by Alex2
     def __unicode__(self):
         #  \xa puts a pound sign in front of the price
         return u'{} - {} - {} - \xa3{} - {}'.format(
@@ -49,3 +52,8 @@ class Expense(models.Model):
 
     class Meta:
         ordering = ['purchase_date', 'description']
+        unique_together = ('user',
+                           'category',
+                           'purchase_date',
+                           'description',
+                           'price')

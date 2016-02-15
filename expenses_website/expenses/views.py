@@ -1,12 +1,16 @@
+import logging
+
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import IntegrityError
 
 from .models import Expense, Category
-from .forms import AddExpenseForm
+
+
+logger = logging.getLogger(__name__)
 
 
 class HomeView(LoginRequiredMixin, TemplateView):
@@ -25,13 +29,19 @@ class ExpenseListView(LoginRequiredMixin, ListView):
 
 class ExpenseCreate(LoginRequiredMixin, CreateView):
     model = Expense
+    template_name = 'expenses/expense_form.html'
     fields = ['category', 'purchase_date', 'description', 'price']
 
     # TODO create separate get_success_url method - overriding std one
 
     def form_valid(self, form):
         expense = get_expense_from_form(self.request.user.username, form)
-        expense.save()
+        try:
+            expense.save()
+        except IntegrityError:
+            logger.debug('caught integrity error')
+            form.add_error(None, 'Duplicate data not allowed')
+            return self.form_invalid(form)
         self.success_url = reverse('expenses:result', args=(expense.pk,))
         return HttpResponseRedirect(self.success_url)
 
@@ -46,21 +56,6 @@ class ExpenseCreate(LoginRequiredMixin, CreateView):
 class ResultView(LoginRequiredMixin, DetailView):
     model = Expense
     template_name = 'expenses/result.html'
-
-
-def add_expense(request):
-    if request.method == 'POST':
-        form = AddExpenseForm(request.POST)
-        if form.is_valid():
-            expense = get_expense_from_form(request.user.username, form)
-            expense.save()
-            return HttpResponseRedirect(
-                reverse('expenses:result', args=(expense.pk,))
-            )
-    else:
-        form = AddExpenseForm()
-
-    return render(request, 'expenses/add_expense.html', {'form': form})
 
 
 def get_expense_from_form(user, form):
