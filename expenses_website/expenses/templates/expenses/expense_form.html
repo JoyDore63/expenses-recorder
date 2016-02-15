@@ -8,7 +8,15 @@
 <p class="lead">User: {{ user.username }}</p>
 
 <form action="" method="post">{% csrf_token %}
-    {{ form.as_p }}
+    <p><label for="id_category">Category:</label> <select id="id_category" name="category">
+    <option value="" selected="selected">---------</option>
+    {% for category in category_list %}
+        <option value="{{ category.pk }}">{{ category.description }}</option>
+    {% endfor %}
+    </select></p>
+    <p><label for="id_purchase_date">Date of purchase:</label> <input id="id_purchase_date" name="purchase_date" type="text" /></p>
+    <p><label for="id_description">Description:</label> <input id="id_description" maxlength="120" name="description" type="text" /></p>
+    <p><label for="id_price">Price:</label> <input id="id_price" name="price" step="0.01" type="number" /></p>
     <input type="submit" value="Create">
 </form>
 </body>

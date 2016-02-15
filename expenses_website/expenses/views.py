@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 
 from .models import Expense, Category
-
+from .forms import CreateExpenseForm
 
 logger = logging.getLogger(__name__)
 
@@ -29,8 +29,15 @@ class ExpenseListView(LoginRequiredMixin, ListView):
 
 class ExpenseCreate(LoginRequiredMixin, CreateView):
     model = Expense
+    form = CreateExpenseForm
     template_name = 'expenses/expense_form.html'
     fields = ['category', 'purchase_date', 'description', 'price']
+    context_object_name = 'category_list'
+
+    def get_queryset(self):
+        l = Category.objects.all()
+        logger.error("l is :"+repr(l))
+        return l
 
     # TODO create separate get_success_url method - overriding std one
 
