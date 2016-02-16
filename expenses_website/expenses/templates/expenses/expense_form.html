@@ -7,17 +7,43 @@
 <body id="create_expense">
 <p class="lead">User: {{ user.username }}</p>
 
-<form action="" method="post">{% csrf_token %}
-    <p><label for="id_category">Category:</label> <select id="id_category" name="category">
-    <option value="" selected="selected">---------</option>
-    {% for category in category_list %}
-        <option value="{{ category.pk }}">{{ category.description }}</option>
-    {% endfor %}
-    </select></p>
-    <p><label for="id_purchase_date">Date of purchase:</label> <input id="id_purchase_date" name="purchase_date" type="text" /></p>
-    <p><label for="id_description">Description:</label> <input id="id_description" maxlength="120" name="description" type="text" /></p>
-    <p><label for="id_price">Price:</label> <input id="id_price" name="price" step="0.01" type="number" /></p>
-    <input type="submit" value="Create">
+<form class="form-horizontal" action="" method="post">{% csrf_token %}
+    <div class="form-group{% if form.category.errors %} has-error{% endif %}">
+        <label for="{{ form.category.id_for_category }}" class="col-sm-2 control-label">{{ form.category.label }}</label>
+        <div class="col-sm-10">
+            {{ form.category.errors }}
+            {{ form.category }}
+            {{ form.category.help }}
+        </div>
+    </div>
+
+    <div class="form-group{% if form.purchase_date.errors %} has-error{% endif %}">
+        <label for="{{ form.purchase_date.id_for_purchase_date }}" class="col-sm-2 control-label">{{ form.purchase_date.label }}</label>
+        <div class="col-sm-10">
+            {{ form.purchase_date.errors }}
+            {{ form.purchase_date }}
+            {{ form.purchase_date.help }}
+        </div>
+    </div>
+
+    <div class="form-group{% if form.description.errors %} has-error{% endif %}">
+        <label for="{{ form.description.id_for_description }}" class="col-sm-2 control-label">{{ form.description.label }}</label>
+        <div class="col-sm-10">
+            {{ form.description.errors }}
+            {{ form.description }}
+            {{ form.description.help }}
+        </div>
+    </div>
+
+    <div class="form-group{% if form.price.errors %} has-error{% endif %}">
+        <label for="{{ form.price.id_for_price }}" class="col-sm-2 control-label">{{ form.price.label }}</label>
+        <div class="col-sm-10">
+            {{ form.price.errors }}
+            {{ form.price }}
+            {{ form.price.help }}
+        </div>
+    </div>
+    <input class="btn btn-primary" type="submit" value="Create">
 </form>
 </body>
 
