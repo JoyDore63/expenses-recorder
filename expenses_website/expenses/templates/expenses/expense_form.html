@@ -8,6 +8,16 @@
 <p class="lead">User: {{ user.username }}</p>
 
 <form class="form-horizontal" action="" method="post">{% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <ul class="text-danger">
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <br/>
+
     <div class="form-group{% if form.category.errors %} has-error{% endif %}">
         <label for="{{ form.category.id_for_category }}" class="col-sm-2 control-label">{{ form.category.label }}</label>
         <div class="col-sm-10">

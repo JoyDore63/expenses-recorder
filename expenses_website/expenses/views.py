@@ -1,7 +1,7 @@
 import logging
 
 from django.views.generic import ListView, DetailView, TemplateView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import FormView
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -27,17 +27,10 @@ class ExpenseListView(LoginRequiredMixin, ListView):
         return Expense.objects.order_by('-purchase_date')[:20]
 
 
-class ExpenseCreate(LoginRequiredMixin, CreateView):
+class ExpenseCreate(LoginRequiredMixin, FormView):
     model = Expense
-    form = CreateExpenseForm
     template_name = 'expenses/expense_form.html'
-    fields = ['category', 'purchase_date', 'description', 'price']
-    context_object_name = 'category_list'
-
-    def get_queryset(self):
-        l = Category.objects.all()
-        logger.error("l is :"+repr(l))
-        return l
+    form_class = CreateExpenseForm
 
     # TODO create separate get_success_url method - overriding std one
 
