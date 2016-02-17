@@ -42,12 +42,12 @@ class Expense(models.Model):
     # Helper for testing and debugging, as recommended by Alex2
     def __unicode__(self):
         #  \xa puts a pound sign in front of the price
-        return u'{} - {} - {} - \xa3{} - {}'.format(
-            self.description,
+        return u'{} - {} - {} - {} - \xa3{}'.format(
             self.user,
+            self.purchase_date,
             self.category,
-            self.price,
-            self.purchase_date
+            self.description,
+            self.price
         )
 
     class Meta:

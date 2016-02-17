@@ -2,8 +2,10 @@
 
 {% block content %}
 <h1>Expenses List</h1>
+
+<body id="expenses_list">
 {% if recent_expenses_list %}
-    <table border=1>
+    <table border=2 class="table table-condensed table-striped">
         <tr>
             <th>User</th>
             <th>Date</th>
@@ -24,5 +26,5 @@
 {% else %}
     <p>No expenses are available.</p>
 {% endif %}
-
+</body>
 {% endblock %}

@@ -1,14 +1,14 @@
 import logging
 
 from django.views.generic import ListView, DetailView, TemplateView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import FormView
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 
 from .models import Expense, Category
-
+from .forms import CreateExpenseForm
 
 logger = logging.getLogger(__name__)
 
@@ -27,10 +27,10 @@ class ExpenseListView(LoginRequiredMixin, ListView):
         return Expense.objects.order_by('-purchase_date')[:20]
 
 
-class ExpenseCreate(LoginRequiredMixin, CreateView):
+class ExpenseCreate(LoginRequiredMixin, FormView):
     model = Expense
     template_name = 'expenses/expense_form.html'
-    fields = ['category', 'purchase_date', 'description', 'price']
+    form_class = CreateExpenseForm
 
     # TODO create separate get_success_url method - overriding std one
 

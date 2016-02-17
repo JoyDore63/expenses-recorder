@@ -4,11 +4,57 @@
 
 <h1>Create Expense</h1>
 
-<p>User: {{ user.username }}</p>
+<body id="create_expense">
+<p class="lead">User: {{ user.username }}</p>
 
-<form action="" method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Create">
+<form class="form-horizontal" action="" method="post">{% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <ul class="text-danger">
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <br/>
+
+    <div class="form-group{% if form.category.errors %} has-error{% endif %}">
+        <label for="{{ form.category.id_for_category }}" class="col-sm-2 control-label">{{ form.category.label }}</label>
+        <div class="col-sm-10">
+            {{ form.category.errors }}
+            {{ form.category }}
+            {{ form.category.help }}
+        </div>
+    </div>
+
+    <div class="form-group{% if form.purchase_date.errors %} has-error{% endif %}">
+        <label for="{{ form.purchase_date.id_for_purchase_date }}" class="col-sm-2 control-label">{{ form.purchase_date.label }}</label>
+        <div class="col-sm-10">
+            {{ form.purchase_date.errors }}
+            {{ form.purchase_date }}
+            {{ form.purchase_date.help }}
+        </div>
+    </div>
+
+    <div class="form-group{% if form.description.errors %} has-error{% endif %}">
+        <label for="{{ form.description.id_for_description }}" class="col-sm-2 control-label">{{ form.description.label }}</label>
+        <div class="col-sm-10">
+            {{ form.description.errors }}
+            {{ form.description }}
+            {{ form.description.help }}
+        </div>
+    </div>
+
+    <div class="form-group{% if form.price.errors %} has-error{% endif %}">
+        <label for="{{ form.price.id_for_price }}" class="col-sm-2 control-label">{{ form.price.label }}</label>
+        <div class="col-sm-10">
+            {{ form.price.errors }}
+            {{ form.price }}
+            {{ form.price.help }}
+        </div>
+    </div>
+    <input class="btn btn-primary" type="submit" value="Create">
 </form>
+</body>
 
 {% endblock %}
