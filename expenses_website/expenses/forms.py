@@ -13,3 +13,10 @@ class CreateExpenseForm(forms.Form):
                                max_digits=4,
                                min_value=0.01,
                                decimal_places=2)
+
+class FilterListForm(forms.Form):
+    category_choices = forms.MultipleChoiceField(required=True, 
+                                                widget=None, 
+                                                label=None, 
+                                                initial=None, 
+                                                help_text='')
