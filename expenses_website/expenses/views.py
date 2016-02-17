@@ -59,7 +59,6 @@ class ResultView(LoginRequiredMixin, DetailView):
 
 
 def get_expense_from_form(user, form):
-    user = user
     category = Category.objects.get(
         description=form.cleaned_data['category']
     )
