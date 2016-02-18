@@ -108,12 +108,15 @@ class ListViewTests(LoggedInTestBase):
         '''
         If an expense exists it should be displayed
         '''
+        category = Category.objects.create(description='Treat')
         expense = Expense.objects.create(user='joy',
-                                         category=test_category,
+                                         category=category,
                                          purchase_date=timezone.now(),
                                          description='Coffee',
                                          price=2.2)
-        response = self.client.get(reverse('expenses:list'))
+        response = self.client.get(reverse('expenses:result',
+                                   args=(expense.id,)))
+        logger.info("response:"+repr(response))
         self.assertContains(response, expense.description)
 
 
