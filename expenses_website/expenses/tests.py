@@ -36,7 +36,7 @@ class ExpenseFormTests(LoggedInTestBase):
         response = self.client.post('/expense_form/',
                                     {'user': 'joy',
                                      'category': test_category,
-                                     'purchase_date': timezone.now(),
+                                     'purchase_date': purchase_date,
                                      'description': 'Flapjack',
                                      'price': 1.5, })
         self.assertEqual(response.status_code, OK)
@@ -48,9 +48,33 @@ class ExpenseFormTests(LoggedInTestBase):
         response = self.client.post('/expense_form',
                                     {'user': 'joy',
                                      'category': test_category,
-                                     'purchase_date': timezone.now(),
+                                     'purchase_date': purchase_date,
                                      'description': 'Refund',
                                      'price': -0.01, })
+        self.assertEquals(response.status_code, MOVED)
+
+    def test_expense_not_created_with_too_large_price(self):
+        '''
+        Post of data with too large price should fail
+        '''
+        response = self.client.post('/expense_form',
+                                    {'user': 'joy',
+                                     'category': test_category,
+                                     'purchase_date': purchase_date,
+                                     'description': 'Expensive item',
+                                     'price': 100})
+        self.assertEquals(response.status_code, MOVED)
+
+    def test_expense_not_created_with_too_many_decimal_places_in_price(self):
+        '''
+        Post of data with price having too many decimal pacles should fail
+        '''
+        response = self.client.post('/expense_form',
+                                    {'user': 'joy',
+                                     'category': test_category,
+                                     'purchase_date': purchase_date,
+                                     'description': 'Expensive item',
+                                     'price': 1.123})
         self.assertEquals(response.status_code, MOVED)
 
     def test_duplicate_expense_not_created(self):

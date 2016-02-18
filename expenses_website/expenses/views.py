@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 
 from .models import Expense, Category
-from .forms import CreateExpenseForm
+from .forms import CreateExpenseForm, FilterListForm
 
 logger = logging.getLogger(__name__)
 
@@ -17,14 +17,26 @@ class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'expenses/home.html'
 
 
-class ExpenseListView(LoginRequiredMixin, ListView):
+class ExpenseListView(LoginRequiredMixin, FormView):
     model = Expense
     template_name = 'expenses/list.html'
-    context_object_name = 'recent_expenses_list'
+    form_class = FilterListForm
+    success_url = '/expense/list/'
 
-    def get_queryset(self):
-        '''Return the last 20 expenses'''
-        return Expense.objects.order_by('-purchase_date')[:20]
+    def get_context_data(self, **kwargs):
+        context = super(ExpenseListView, self).get_context_data(**kwargs)
+        context['category_list'] = Category.objects.all()
+        context['recent_expenses_list'] = Expense.objects.order_by('-purchase_date')[:20]
+        return context
+
+    def form_valid(self, form):
+        category_choices = form.cleaned_data['category_choices']
+        logger.error("choices:"+repr(category_choices))
+        return HttpResponseRedirect(self.fish)
+
+    def form_invalid(self, form):
+        logger.error("FORM INVALID")
+        return super(ExpenseListView)
 
 
 class ExpenseCreate(LoginRequiredMixin, FormView):
@@ -59,7 +71,6 @@ class ResultView(LoginRequiredMixin, DetailView):
 
 
 def get_expense_from_form(user, form):
-    user = user
     category = Category.objects.get(
         description=form.cleaned_data['category']
     )

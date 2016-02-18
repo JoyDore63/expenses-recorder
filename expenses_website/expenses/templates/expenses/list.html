@@ -3,7 +3,30 @@
 {% block content %}
 <h1>Expenses List</h1>
 
+<br/>
+
 <body id="expenses_list">
+
+<form action="" method="post">{% csrf_token %}
+<p class="lead">Select categories:</p>
+{% if category_list %}
+    {% for category in category_list %}
+        <label class="checkbox-inline">
+            <div class="checkbox">
+                <input type="checkbox" value={{ category.pk }} checked>{{ category.description }}</input>
+            </div>
+        </label>
+    {% endfor %}
+    <div>
+        <input class="btn btn-primary" type="submit" value="Update list">
+    </div>
+{% endif %}
+
+</form>
+
+<br/>
+<br/>
+
 {% if recent_expenses_list %}
     <table border=2 class="table table-condensed table-striped">
         <tr>
@@ -24,7 +47,7 @@
     {% endfor %}
     </table>
 {% else %}
-    <p>No expenses are available.</p>
+    <p class="lead">No expenses are available.</p>
 {% endif %}
 </body>
 {% endblock %}
