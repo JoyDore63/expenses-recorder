@@ -14,9 +14,17 @@ class CreateExpenseForm(forms.Form):
                                min_value=0.01,
                                decimal_places=2)
 
+
 class FilterListForm(forms.Form):
-    category_choices = forms.MultipleChoiceField(required=True, 
-                                                widget=None, 
-                                                label=None, 
-                                                initial=None, 
-                                                help_text='')
+    # Create a list of tuples as MultipleChoiceField is not happy with
+    # list of objects from Category.objects.all()
+    choice_list = []
+    for category in Category.objects.all():
+        choice_list.append((category.pk, category.description))
+    # Get just the pks for initial values => all checkboxes will be ticked
+    initial_values = [pk for pk, description in choice_list]
+    category_choices = forms.MultipleChoiceField(
+        choice_list,
+        widget=forms.CheckboxSelectMultiple,
+        initial=initial_values
+    )
