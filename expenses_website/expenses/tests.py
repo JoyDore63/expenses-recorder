@@ -67,7 +67,7 @@ class ExpenseFormTests(LoggedInTestBase):
 
     def test_expense_not_created_with_too_many_decimal_places_in_price(self):
         '''
-        Post of data with price having too many decimal pacles should fail
+        Post of data with price having too many decimal places should fail
         '''
         response = self.client.post('/expense_form',
                                     {'user': 'joy',
@@ -108,12 +108,15 @@ class ListViewTests(LoggedInTestBase):
         '''
         If an expense exists it should be displayed
         '''
+        category = Category.objects.create(description='Treat')
         expense = Expense.objects.create(user='joy',
-                                         category=test_category,
+                                         category=category,
                                          purchase_date=timezone.now(),
                                          description='Coffee',
                                          price=2.2)
-        response = self.client.get(reverse('expenses:list'))
+        response = self.client.get(reverse('expenses:result',
+                                   args=(expense.id,)))
+        logger.info("response:"+repr(response))
         self.assertContains(response, expense.description)
 
 

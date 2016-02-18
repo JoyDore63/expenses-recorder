@@ -8,20 +8,19 @@
 <body id="expenses_list">
 
 <form action="" method="post">{% csrf_token %}
-<p class="lead">Select categories:</p>
-{% if category_list %}
-    {% for category in category_list %}
-        <label class="checkbox-inline">
-            <div class="checkbox">
-                <input type="checkbox" value={{ category.pk }} checked>{{ category.description }}</input>
-            </div>
-        </label>
-    {% endfor %}
+
+    <div class="text-danger">
+        {{ form.category_choices.errors }}
+    </div>
+    <div>
+        <label class="lead" for="{{ form.category_choices.id_for_category_choices }}">Select categories:</label>
+        <div class="checkbox">
+        {{ form.category_choices }}
+        </div>
+    </div>
     <div>
         <input class="btn btn-primary" type="submit" value="Update list">
     </div>
-{% endif %}
-
 </form>
 
 <br/>
