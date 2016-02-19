@@ -1,23 +1,23 @@
 [
 {
     "model": "expenses.category",
-    "pk": "Breakfast",
+    "pk": 1,
     "fields": {
-        "description": "Breakfast from shop or eating out"
+        "description": "Lunch"
     }
 },
 {
     "model": "expenses.category",
-    "pk": "Lunch",
+    "pk": 2,
     "fields": {
-        "description": "Lunch from shop or eating out"
+        "description": "Breakfast"
     }
 },
 {
     "model": "expenses.category",
-    "pk": "Treat",
+    "pk": 12,
     "fields": {
-        "description": "Snacks"
+        "description": "Treat"
     }
 }
 ]
