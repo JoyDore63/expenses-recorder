@@ -30,7 +30,7 @@ will be selectable from the availble ones in the DB.
 Developer Build
 ===============
 
-Check out code then:
+Check out code then::
 
     virtualenv --setuptools venv --python=python2.7.6
     . venv/bin/activate
@@ -41,7 +41,7 @@ Check out code then:
 User logins
 ===========
 
-These two logins are created:
+These two logins are created::
 
 joy pa55word
 tony pa55word
