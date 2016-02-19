@@ -4,15 +4,25 @@ from django.views.generic import DetailView, TemplateView
 from django.views.generic.edit import FormView
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
 from .models import Expense, Category
 from .forms import CreateExpenseForm, FilterListForm
 
 logger = logging.getLogger(__name__)
+
+
+def logout_view(request):
+    logout(request)
+    return redirect(reverse('expenses:logged_out'))
+
+
+class LoggedOutView(TemplateView):
+    template_name = 'expenses/logged_out.html'
 
 
 class HomeView(LoginRequiredMixin, TemplateView):
