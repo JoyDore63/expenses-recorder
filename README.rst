@@ -43,5 +43,5 @@ User logins
 
 These two logins are created::
 
-joy pa55word
-tony pa55word
+    joy pa55word
+    tony pa55word
