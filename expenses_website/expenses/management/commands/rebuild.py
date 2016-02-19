@@ -14,7 +14,7 @@ class Command(BaseCommand):
         management.call_command('migrate')
         # Load users
         fixture_path = os.path.join(settings.BASE_DIR,
-                                    'expenses_website/core/fixtures')
+                                    'expenses_website/expenses/fixtures')
         file_path = os.path.join(fixture_path, 'app_users.json')
         management.call_command('loaddata', file_path)
         # Load categories
