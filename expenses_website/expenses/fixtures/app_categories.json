@@ -1,0 +1,23 @@
+[
+{
+    "model": "expenses.category",
+    "pk": 1,
+    "fields": {
+        "description": "Lunch"
+    }
+},
+{
+    "model": "expenses.category",
+    "pk": 2,
+    "fields": {
+        "description": "Breakfast"
+    }
+},
+{
+    "model": "expenses.category",
+    "pk": 12,
+    "fields": {
+        "description": "Treat"
+    }
+}
+]

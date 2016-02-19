@@ -2,33 +2,41 @@
 
 {% block content %}
 
-{% if form.errors %}
-<p>Login failed.  Please try again.</p>
-{{ form.errors }}
-{% endif %}
-
-{% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have accesss to this page.  To proceed,
-    please login with an account that has access.</p>
-    {% else %}
-    <p>Please login to see this page.</p>
+{% if form.non_field_errors %}
+    <p class="lead">Login failed.  Please try again.</p>
+    <ul class="text-danger">
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    {% if next %}
+        {% if user.is_authenticated %}
+        <p>Your account doesn't have accesss to this page.  To proceed,
+        please login with an account that has access.</p>
+        {% else %}
+        <p class="lead">Please login to see this page.</p>
+        {% endif %}
     {% endif %}
 {% endif %}
 
-<form method="post" action="{% url 'login' %}">
+<form class="form-horizontal" method="post" action="{% url 'login' %}">
 {% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
-<input type="submit" value="login"/>
+<div class="form-group{% if form.username.errors %} has-error{% endif %}">
+    <label for="{{ form.username.id_for_username }}" class="col-sm-2 control-label">{{ form.username.label_tag}}</label>
+    <div class='col-sm-10'>
+        {{ form.username.errors }}
+        {{ form.username }}
+    </div>
+</div>
+<div class="form-group{% if form.password.errors %} has-error{% endif %}">
+    <label for="{{ form.username.password }}" class="col-sm-2 control-label">{{ form.password.label_tag}}</label>
+    <div class='col-sm-10'>
+        {{ form.password.errors }}
+        {{ form.password }}
+    </div>
+</div>
+<input class="btn btn-primary" type="submit" value="login"/>
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
 
