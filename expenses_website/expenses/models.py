@@ -1,3 +1,4 @@
+# coding=utf8
 from __future__ import unicode_literals
 
 from django.db import models
@@ -42,7 +43,7 @@ class Expense(models.Model):
     # Helper for testing and debugging, as recommended by Alex2
     def __unicode__(self):
         #  \xa puts a pound sign in front of the price
-        return u'{} - {} - {} - {} - \xa3{}'.format(
+        return u'{} - {} - {} - {} - £{}'.format(
             self.user,
             self.purchase_date,
             self.category,
