@@ -21,20 +21,21 @@ class CreateExpenseForm(forms.Form):
 
 class FilterListForm(forms.Form):
 
-    # Create a list of tuples as MultipleChoiceField is not happy with
-    # list of objects from Category.objects.all()
-    choice_list = []
-    # Get just the pks for initial values => all checkboxes will be ticked
-    initial_values = []
-
     category_choices = forms.MultipleChoiceField(
-        choice_list,
-        widget=forms.CheckboxSelectMultiple,
-        initial=initial_values
+        widget=forms.CheckboxSelectMultiple
     )
 
     def __init__(self, **kwargs):
-        for category in Category.objects.all():
-            self.choice_list.append((category.pk, category.description))
-
-        self.initial_values = [pk for pk, description in self.choice_list]
+        super(FilterListForm, self).__init__(**kwargs)
+        # Create a list of tuples as MultipleChoiceField is not happy with
+        # list of objects from Category.objects.all()
+        all_choices = Category.objects.all()
+        self.fields['category_choices'].choices = all_choices.values_list(
+            'id',
+            'description'
+        )
+        # Get just the pks for initial values => all checkboxes will be ticked
+        self.fields['category_choices'].initial = all_choices.values_list(
+            'id',
+            flat=True
+        )
