@@ -15,7 +15,7 @@ For example,
 
 
 class Category(models.Model):
-    description = models.CharField(max_length=30)
+    description = models.CharField(max_length=30, unique=True)
 
     # Helper for testing and debugging, as recommended by Alex2
     # This is also used on the auto-generated expense_form
