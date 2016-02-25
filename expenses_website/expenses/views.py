@@ -62,7 +62,7 @@ class ExpenseCreate(LoginRequiredMixin, FormView):
     # TODO create separate get_success_url method - overriding std one
 
     def form_valid(self, form):
-        expense = get_expense_from_form(self.request.user.username, form)
+        expense = get_expense_from_form(self.request.user, form)
         try:
             expense.save()
         except IntegrityError:
