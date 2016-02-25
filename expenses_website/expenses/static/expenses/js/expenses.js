@@ -1,46 +1,50 @@
 $(document).ready(function(){
+    function setErrorStatus(field, error_element){
+        field.removeClass("valid").addClass("invalid");
+        error_element.removeClass("error").addClass("error_show");
+    }
+    function clearErrorStatus(field, error_element){
+        field.removeClass("invalid").addClass("valid");
+        error_element.removeClass("error_show").addClass("error");
+    }
+    function checkValueWasEntered(field){
+        var input=$(field);
+        var value=input.val();
+        // error element is a span with the same parent as input field
+        var error_element=$("span", input.parent());
+        if (value){
+            clearErrorStatus(input, error_element);
+            return true;
+        }
+        else {
+            setErrorStatus(input, error_element);
+            return false;
+        }
+    }
     // for each of the input fields,
     //   if value was entered
     //     set to valid and disable error message
     //   else (no value has been input)
     //     set error message to show and flag as invalid
-    $('#id_category').on('input', function(){
-        var input=$(this);
-        var value=input.val();
-        var error_element=$("span", $(this).parent());
-        if (value){
-            input.removeClass("invalid").addClass("valid");
-            error_element.removeClass("error_show").addClass("error");
-        }
-        else {
-            input.removeClass("valid").addClass("invalid");
-            error_element.removeClass("error").addClass("error_show");
-        }
+    $('#id_category').on('change', function(){
+        checkValueWasEntered(this);
     });
     $('#id_description').on('input', function(){
-        var input=$(this);
-        var value=input.val();
-        var error_element=$("span", $(this).parent());
-        if (value){
-            input.removeClass("invalid").addClass("valid");
-            error_element.removeClass("error_show").addClass("error");
-        }
-        else {
-            input.removeClass("valid").addClass("invalid");
-            error_element.removeClass("error").addClass("error_show");
-        }
+        checkValueWasEntered(this);
     });
     $("#id_price").on('input', function() {
-        var input=$(this);
-        var value=input.val();
-        var error_element=$("span", $(this).parent());
-        if (value){
-            input.removeClass("invalid").addClass("valid");
-            error_element.removeClass("error_show").addClass("error");
-        }
-        else {
-            input.removeClass("valid").addClass("invalid");
-            error_element.removeClass("error").addClass("error_show");
+        entered=checkValueWasEntered(this);
+        // Price must also be numeric and within accepted range
+        if (entered) {
+            var input=$(this)
+            var value=input.val();
+            var error_element=$("span", input.parent());
+            if ($.isNumeric(value) && value > 0 && value < 100){
+                clearErrorStatus(input, error_element);
+            }
+            else {
+                setErrorStatus(input, error_element);
+            }    
         }
     });
     // taken from https://formden.com/blog/validate-contact-form-jquery

@@ -55,17 +55,23 @@
 
     <div class="form-group{% if form.price.errors %} has-error{% endif %}">
         <label for="id_price" class="col-sm-2 control-label">{{ form.price.label }}</label>
-        <div class="input-group col-sm-10">
-            <div class="input-group-addon">£</div>
-            {{ form.price }}
-            {{ form.price.help }}
-            <span class="error">Price is required</span>
-            {% for error in form.price.errors %}
-            <span class="help-block">{{ error }}</span>
-            {% endfor %}
+        <div class="col-sm-10">
+            <div class="input-group col-sm-offset-0">
+                <div class="input-group-addon">£</div>
+                {{ form.price }}
+                {{ form.price.help }}
+                <span class="error">Price is required, must be numeric and in range 0-99.99</span>
+                {% for error in form.price.errors %}
+                <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
         </div>
     </div>
-    <input id="expense_submit" class="btn btn-primary disabled" type="submit" value="Create">
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input id="expense_submit" class="btn btn-primary disabled" type="submit" value="Create">
+        </div>
+    </div>
 </form>
 
 </body>
