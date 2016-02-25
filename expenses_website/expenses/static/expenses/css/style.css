@@ -1,0 +1,23 @@
+#expenses_home .home,
+#create_expense .create,
+#expenses_list .list{
+  background:WhiteSmoke!important;
+}
+
+.error{
+  display: none;
+  margin-left: 10px;
+}
+
+.error_show{
+  color: red;
+  margin-left: 10px;
+}
+
+input.invalid{
+  border: 2px solid red;
+}
+
+input.valid{
+  border: 2px solid green;
+}
