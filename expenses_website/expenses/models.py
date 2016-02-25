@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.core.validators import DecimalValidator, MinValueValidator
+from django.contrib.auth.models import User
 
 
 '''
@@ -29,8 +30,11 @@ class Category(models.Model):
 
 class Expense(models.Model):
     description = models.CharField(max_length=120)
-    user = models.CharField(max_length=10)
-    category = models.ForeignKey(Category)
+    # User is foreign key in admin user table
+    # PROTECT means don't delete related expenses if user is deleted
+    #  - will raise an error if attempted
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
     price = models.DecimalField(
         max_digits=4,
         decimal_places=2,
