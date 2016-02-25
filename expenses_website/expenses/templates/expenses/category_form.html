@@ -1,0 +1,16 @@
+{% extends "expenses/base.html" %}
+
+{% block content %}
+
+<h1>Create Category</h1>
+
+<body id="create_category">
+
+<form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create">
+</form>
+
+</body>
+
+{% endblock %}
