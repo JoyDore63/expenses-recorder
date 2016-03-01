@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 OK = 200
 MOVED = 301
 REDIRECT = 302
-test_category = Category.objects.create(description='Treat')
 purchase_date = timezone.now()
 
 
@@ -33,8 +32,9 @@ class ExpenseFormTests(LoggedInTestBase):
         '''
         Post of valid data should create an expense
         '''
+        test_category = Category.objects.create(description='Treat')
         response = self.client.post('/expense_form/',
-                                    {'user': 'joy',
+                                    {'user': self.user,
                                      'category': test_category,
                                      'purchase_date': purchase_date,
                                      'description': 'Flapjack',
@@ -45,8 +45,9 @@ class ExpenseFormTests(LoggedInTestBase):
         '''
         Post of data with negative price should fail
         '''
+        test_category = Category.objects.create(description='Treat')
         response = self.client.post('/expense_form',
-                                    {'user': 'joy',
+                                    {'user': self.user,
                                      'category': test_category,
                                      'purchase_date': purchase_date,
                                      'description': 'Refund',
@@ -57,8 +58,9 @@ class ExpenseFormTests(LoggedInTestBase):
         '''
         Post of data with too large price should fail
         '''
+        test_category = Category.objects.create(description='Treat')
         response = self.client.post('/expense_form',
-                                    {'user': 'joy',
+                                    {'user': self.user,
                                      'category': test_category,
                                      'purchase_date': purchase_date,
                                      'description': 'Expensive item',
@@ -69,8 +71,9 @@ class ExpenseFormTests(LoggedInTestBase):
         '''
         Post of data with price having too many decimal places should fail
         '''
+        test_category = Category.objects.create(description='Treat')
         response = self.client.post('/expense_form',
-                                    {'user': 'joy',
+                                    {'user': self.user,
                                      'category': test_category,
                                      'purchase_date': purchase_date,
                                      'description': 'Expensive item',
@@ -81,13 +84,14 @@ class ExpenseFormTests(LoggedInTestBase):
         '''
         Post of duplicate data should fail
         '''
-        Expense.objects.create(user='joy',
+        test_category = Category.objects.create(description='Treat')
+        Expense.objects.create(user=self.user,
                                category=test_category,
                                purchase_date=purchase_date,
                                description='Coffee',
                                price=2.2)
         with self.assertRaises(IntegrityError):
-            Expense.objects.create(user='joy',
+            Expense.objects.create(user=self.user,
                                    category=test_category,
                                    purchase_date=purchase_date,
                                    description='Coffee',
@@ -109,7 +113,7 @@ class ListViewTests(LoggedInTestBase):
         If an expense exists it should be displayed
         '''
         category = Category.objects.create(description='Treat')
-        expense = Expense.objects.create(user='joy',
+        expense = Expense.objects.create(user=self.user,
                                          category=category,
                                          purchase_date=timezone.now(),
                                          description='Coffee',
