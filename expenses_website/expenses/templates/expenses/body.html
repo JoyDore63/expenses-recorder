@@ -1,7 +1,17 @@
 <ul class="nav nav-pills">
-    <li role="presentation" class="home"><a href="{% url 'expenses:home' %}">Home</a></li>
-    <li role="presentation" class="create_category"><a href="{% url 'expenses:create_category' %}">Create a Category</a></li>
-    <li role="presentation" class="create"><a href="{% url 'expenses:create' %}">Create an Expense</a></li>
-    <li role="presentation" class="list"><a href="{% url 'expenses:list' %}">Expenses List</a></li>
-    <li role="presentation" class="logout"><a href="{% url 'expenses:logout' %}">Logout</a></li>
+    <li role="presentation" class="home">
+        <a href="{% url 'expenses:home' %}"><span class="glyphicon glyphicon-home"></span> Home</a>
+    </li>
+    <li role="presentation" class="create_category">
+        <a href="{% url 'expenses:create_category' %}"><span class="glyphicon glyphicon-plus"></span> Create a Category</a>
+    </li>
+    <li role="presentation" class="create">
+        <a href="{% url 'expenses:create' %}"><span class="glyphicon glyphicon-plus"></span> Create an Expense</a>
+    </li>
+    <li role="presentation" class="list">
+        <a href="{% url 'expenses:list' %}"><span class="glyphicon glyphicon-th-list"></span> Expenses List</a>
+    </li>
+    <li role="presentation" class="logout">
+        <a href="{% url 'expenses:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+    </li>
 </ul>
