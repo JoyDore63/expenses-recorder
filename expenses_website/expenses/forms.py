@@ -8,6 +8,10 @@ from .models import Category
 logger = logging.getLogger(__name__)
 
 
+class CreateCategoryForm(forms.Form):
+    description = forms.CharField(max_length=30)
+
+
 class CreateExpenseForm(forms.Form):
     category = forms.ModelChoiceField(Category.objects.all())
     purchase_date = forms.DateField(widget=forms.SelectDateWidget,

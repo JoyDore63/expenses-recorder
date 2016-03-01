@@ -1,5 +1,7 @@
 #expenses_home .home,
+#create_category .create_category,
 #create_expense .create,
+#logged_out .logout,
 #expenses_list .list{
   background:WhiteSmoke!important;
 }

@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
 from .models import Expense, Category
-from .forms import CreateExpenseForm, FilterListForm
+from .forms import CreateExpenseForm, FilterListForm, CreateCategoryForm
 
 logger = logging.getLogger(__name__)
 
@@ -54,14 +54,29 @@ class ExpenseListView(LoginRequiredMixin, FormView):
         )
 
 
+class CategoryCreate(LoginRequiredMixin, FormView):
+    model = Category
+    template_name = 'expenses/category_form.html'
+    form_class = CreateCategoryForm
+
+    def form_valid(self, form):
+        category = Category(description=form.cleaned_data['description'])
+        try:
+            category.save()
+        except IntegrityError:
+            form.add_error(None, "Duplicate data not allowed")
+            return self.form_invalid(form)
+        self.success_url = reverse('expenses:category', args=(category.pk,))
+        return HttpResponseRedirect(self.success_url)
+
+
 class ExpenseCreate(LoginRequiredMixin, FormView):
     model = Expense
     template_name = 'expenses/expense_form.html'
     form_class = CreateExpenseForm
 
-    # TODO create separate get_success_url method - overriding std one
-
     def form_valid(self, form):
+        # Create new Expense object
         expense = get_expense_from_form(self.request.user, form)
         try:
             expense.save()
@@ -84,6 +99,11 @@ class ExpenseCreate(LoginRequiredMixin, FormView):
 class ResultView(LoginRequiredMixin, DetailView):
     model = Expense
     template_name = 'expenses/result.html'
+
+
+class CategoryView(LoginRequiredMixin, DetailView):
+    model = Category
+    template_name = 'expenses/category.html'
 
 
 def get_expense_from_form(user, form):

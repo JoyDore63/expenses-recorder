@@ -1,0 +1,12 @@
+{% extends "expenses/base.html" %}
+
+{% block content %}
+
+<h1>Category details</h1>
+
+<p class="lead">Added category: {{ category }}<p>
+
+<br/>
+<a href="{% url 'expenses:create_category' %}">Create another</a>
+
+{% endblock %}
