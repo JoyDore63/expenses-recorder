@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 OK = 200
 MOVED = 301
 REDIRECT = 302
-test_category = Category.objects.create(description='Treat')
 purchase_date = timezone.now()
 
 
@@ -25,6 +24,25 @@ class LoggedInTestBase(TestCase):
         self.client.login(username='joy', password='password')
 
 
+class CategoryFormTests(LoggedInTestBase):
+
+    def test_post_creates_category(self):
+        '''
+        Post of valid data should create a category
+        '''
+        response = self.client.post('/category_form/',
+                                    description='Car Park')
+        self.assertEqual(response.status_code, OK)
+
+    def test_duplicate_category_not_created(self):
+        '''
+        Post of duplicate data should fail
+        '''
+        Category.objects.create(description='Treat')
+        with self.assertRaises(IntegrityError):
+            Category.objects.create(description='Treat')
+
+
 # Validation tests are here.
 # Validations added to model are not called when models are used directly
 class ExpenseFormTests(LoggedInTestBase):
@@ -33,8 +51,9 @@ class ExpenseFormTests(LoggedInTestBase):
         '''
         Post of valid data should create an expense
         '''
+        test_category = Category.objects.create(description='Treat')
         response = self.client.post('/expense_form/',
-                                    {'user': 'joy',
+                                    {'user': self.user,
                                      'category': test_category,
                                      'purchase_date': purchase_date,
                                      'description': 'Flapjack',
@@ -45,8 +64,9 @@ class ExpenseFormTests(LoggedInTestBase):
         '''
         Post of data with negative price should fail
         '''
+        test_category = Category.objects.create(description='Treat')
         response = self.client.post('/expense_form',
-                                    {'user': 'joy',
+                                    {'user': self.user,
                                      'category': test_category,
                                      'purchase_date': purchase_date,
                                      'description': 'Refund',
@@ -57,8 +77,9 @@ class ExpenseFormTests(LoggedInTestBase):
         '''
         Post of data with too large price should fail
         '''
+        test_category = Category.objects.create(description='Treat')
         response = self.client.post('/expense_form',
-                                    {'user': 'joy',
+                                    {'user': self.user,
                                      'category': test_category,
                                      'purchase_date': purchase_date,
                                      'description': 'Expensive item',
@@ -69,8 +90,9 @@ class ExpenseFormTests(LoggedInTestBase):
         '''
         Post of data with price having too many decimal places should fail
         '''
+        test_category = Category.objects.create(description='Treat')
         response = self.client.post('/expense_form',
-                                    {'user': 'joy',
+                                    {'user': self.user,
                                      'category': test_category,
                                      'purchase_date': purchase_date,
                                      'description': 'Expensive item',
@@ -81,13 +103,14 @@ class ExpenseFormTests(LoggedInTestBase):
         '''
         Post of duplicate data should fail
         '''
-        Expense.objects.create(user='joy',
+        test_category = Category.objects.create(description='Treat')
+        Expense.objects.create(user=self.user,
                                category=test_category,
                                purchase_date=purchase_date,
                                description='Coffee',
                                price=2.2)
         with self.assertRaises(IntegrityError):
-            Expense.objects.create(user='joy',
+            Expense.objects.create(user=self.user,
                                    category=test_category,
                                    purchase_date=purchase_date,
                                    description='Coffee',
@@ -109,15 +132,52 @@ class ListViewTests(LoggedInTestBase):
         If an expense exists it should be displayed
         '''
         category = Category.objects.create(description='Treat')
-        expense = Expense.objects.create(user='joy',
+        expense = Expense.objects.create(user=self.user,
                                          category=category,
                                          purchase_date=timezone.now(),
                                          description='Coffee',
                                          price=2.2)
-        response = self.client.get(reverse('expenses:result',
-                                   args=(expense.id,)))
-        logger.info("response:"+repr(response))
+        response = self.client.get(reverse('expenses:list'))
         self.assertContains(response, expense.description)
+
+        def test_category_filter(self):
+            '''
+            Only the expenses in the chosen category should be displayed
+            '''
+            category1 = Category.objects.create(description='Treat')
+            category2 = Category.objects.create(description="Lunch")
+            expense1 = Expense.objects.create(user=self.user,
+                                              category=category1,
+                                              purchase_date=timezone.now(),
+                                              description='Coffee',
+                                              price=2.9)
+            expense2 = Expense.objects.create(user=self.user,
+                                              category=category2,
+                                              purchase_date=timezone.now(),
+                                              description='salad',
+                                              price=3.0)
+            category_choices = [category1]
+            response = self.client.get(reverse('expenses:list'),
+                                       category_choices)
+            self.assertContains(response, expense1.description)
+            self.assertNotContains(response, expense2.description)
+
+
+class ResultViewTests(LoggedInTestBase):
+
+    def test_result_view_contains_expense(self):
+            '''
+            If an expense exists it should be displayed
+            '''
+            category = Category.objects.create(description='Treat')
+            expense = Expense.objects.create(user=self.user,
+                                             category=category,
+                                             purchase_date=timezone.now(),
+                                             description='Coffee',
+                                             price=2.2)
+            response = self.client.get(reverse('expenses:result',
+                                       args=(expense.id,)))
+            self.assertContains(response, expense.description)
 
 
 # Login required tests
