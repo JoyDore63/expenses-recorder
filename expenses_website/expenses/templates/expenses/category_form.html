@@ -2,13 +2,27 @@
 
 {% block content %}
 
-<h1>Create Category</h1>
-
+<h1>Create a Category</h1>
+<br/>
 <body id="create_category">
 
-<form action="" method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Create">
+<form class="form-horizontal" action="" method="post">{% csrf_token %}
+    <div class="form-group{% if form.category.errors %} has-error{% endif %}">
+        <label for="id_description" class="col-sm-2 control-label">{{ form.description.label }}</label>
+        <div class="col-sm-8">
+            {{ form.description }}
+            {% for error in form.description.errors %}
+            <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-8">
+            <button type="submit" class="btn btn-primary">
+                <span class="glyphicon glyphicon-plus"></span> Create
+            </button>
+        </div>
+    </div>
 </form>
 
 </body>

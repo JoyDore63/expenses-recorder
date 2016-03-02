@@ -8,7 +8,6 @@
 <body id="expenses_list">
 
 <form action="" method="post">{% csrf_token %}
-
     <div class="text-danger">
         {{ form.category_choices.errors }}
     </div>
@@ -19,7 +18,9 @@
         </div>
     </div>
     <div>
-        <input class="btn btn-primary" type="submit" value="Update list">
+        <button class="btn btn-primary" type="submit">
+            <span class="glyphicon glyphicon-refresh"></span> Update List
+        </button>
     </div>
 </form>
 
