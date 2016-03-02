@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import redirect, render
 from django.template import RequestContext
 
 from .models import Expense, Category
@@ -34,24 +34,25 @@ class ExpenseListView(LoginRequiredMixin, FormView):
     template_name = 'expenses/list.html'
     form_class = FilterListForm
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, select_data=True, **kwargs):
         context = super(ExpenseListView, self).get_context_data(**kwargs)
-        context['category_list'] = Category.objects.all()
-        expense_list = Expense.objects.order_by('-category', '-purchase_date')
-        context['recent_expenses_list'] = expense_list
+        if select_data:
+            expense_list = Expense.objects.order_by('-category',
+                                                    '-purchase_date')
+            context['recent_expenses_list'] = expense_list
         return context
 
     def form_valid(self, form, **kwargs):
         category_choices = form.cleaned_data['category_choices']
         new_list = Expense.objects.filter(category__in=category_choices)
-        context = self.get_context_data(**kwargs)
+        context = self.get_context_data(select_data=False, **kwargs)
         context['recent_expenses_list'] = new_list
         # Need a RequestContext to handle the csrf token, context is a dict
-        return render_to_response(
+        return render(
+            self.request,
             self.template_name,
             context=context,
-            context_instance=RequestContext(self.request)
-        )
+            context_instance=RequestContext(self.request))
 
 
 class CategoryCreate(LoginRequiredMixin, FormView):
@@ -107,9 +108,7 @@ class CategoryView(LoginRequiredMixin, DetailView):
 
 
 def get_expense_from_form(user, form):
-    category = Category.objects.get(
-        description=form.cleaned_data['category']
-    )
+    category = form.cleaned_data['category']
     purchase_date = form.cleaned_data['purchase_date']
     description = form.cleaned_data['description']
     price = form.cleaned_data['price']
