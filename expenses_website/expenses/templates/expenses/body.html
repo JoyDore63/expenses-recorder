@@ -1,6 +1,9 @@
 <ul class="nav nav-pills">
-    <li role="presentation" class="home">
-        <a href="{% url 'expenses:home' %}"><span class="glyphicon glyphicon-home"></span> Home</a>
+    <li role="presentation" class="brand">
+        <a class="">
+            <span class="glyphicon glyphicon-user"></span>
+            User: {{ user.username }}
+        </a>
     </li>
     <li role="presentation" class="create_category">
         <a href="{% url 'expenses:create_category' %}"><span class="glyphicon glyphicon-plus"></span> Create a Category</a>

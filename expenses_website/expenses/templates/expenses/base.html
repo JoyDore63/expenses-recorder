@@ -27,7 +27,18 @@
 
     <div class="container-fluid">
         {% include 'expenses/body.html' %}
+
         {% block content %}{% endblock %}
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ messsage.tags }}"{% endif %}>
+                <script>alert('{{ message }}')</script>
+                </li>
+             {% endfor %}
+        </ul>
+        {% endif %}
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins)-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
