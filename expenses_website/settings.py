@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'expenses_website.expenses',
     'zap',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -50,6 +51,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'expenses_website.urls'
@@ -149,3 +151,6 @@ LOGGING = {
         },
     },
 }
+
+# for django debug toolbar
+INTERNAL_IPS = ('127.0.0.1')

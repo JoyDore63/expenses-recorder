@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<form class="form-horizontal" method="post" action="{% url 'login' %}">
+{% csrf_token %}
 {% if form.non_field_errors %}
     <p class="lead">Login failed.  Please try again.</p>
     <ul class="text-danger">
@@ -19,9 +21,6 @@
         {% endif %}
     {% endif %}
 {% endif %}
-
-<form class="form-horizontal" method="post" action="{% url 'login' %}">
-{% csrf_token %}
 <div class="form-group{% if form.username.errors %} has-error{% endif %}">
     <label for="{{ form.username.id_for_username }}" class="col-sm-2 control-label">{{ form.username.label_tag}}</label>
     <div class='col-sm-10'>
@@ -36,7 +35,13 @@
         {{ form.password }}
     </div>
 </div>
-<input class="btn btn-primary" type="submit" value="login"/>
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <button class="btn btn-primary" type="submit"/>
+            <span class="glyphicon glyphicon-log-in"></span> Login
+        </button>
+    </div>
+</div>
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
 

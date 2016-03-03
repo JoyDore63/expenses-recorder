@@ -7,20 +7,24 @@
 
 <body id="expenses_list">
 
-<form action="" method="post">{% csrf_token %}
-    <div class="text-danger">
-        {{ form.category_choices.errors }}
-    </div>
-    <div>
-        <label class="lead" for="{{ form.category_choices.id_for_category_choices }}">Select categories:</label>
-        <div class="checkbox">
-        {{ form.category_choices }}
+<form class="form-horizontal" action="" method="post">{% csrf_token %}
+    <div class="form-group{% if form.category_choices.errors %} has-error{% endif %}">
+        <div>
+            {{ form.category_choices.errors }}
+        </div>
+        <div>
+            <label class="col-sm-2 control-label" for="{{ form.category_choices.id_for_category_choices }}">Select categories:</label>
+            <div class="col-sm-8 checkbox">
+            {{ form.category_choices }}
+            </div>
         </div>
     </div>
-    <div>
-        <button class="btn btn-primary" type="submit">
-            <span class="glyphicon glyphicon-refresh"></span> Update List
-        </button>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-8">
+            <button class="btn btn-primary" type="submit">
+                <span class="glyphicon glyphicon-refresh"></span> Update List
+            </button>
+        </div>
     </div>
 </form>
 
