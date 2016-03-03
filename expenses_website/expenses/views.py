@@ -10,6 +10,7 @@ from django.db import IntegrityError
 from django.shortcuts import redirect, render
 from django.template import RequestContext
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Expense, Category
 from .forms import CreateExpenseForm, FilterListForm, CreateCategoryForm
@@ -36,7 +37,17 @@ class ExpenseListView(LoginRequiredMixin, FormView):
         if select_data:
             expense_list = Expense.objects.order_by('-category',
                                                     '-purchase_date')
-            context['recent_expenses_list'] = expense_list
+            paginator = Paginator(expense_list, 12)
+            page = self.request.GET.get('page')
+            try:
+                page_list = paginator.page(page)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver the first page
+                page_list = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range, deliver last page of results
+                page_list = paginator.page(paginator.num_pages)
+            context['recent_expenses_list'] = page_list
         return context
 
     def form_valid(self, form, **kwargs):
