@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.shortcuts import redirect, render
 from django.template import RequestContext
+from django.contrib import messages
 
 from .models import Expense, Category
 from .forms import CreateExpenseForm, FilterListForm, CreateCategoryForm
@@ -23,10 +24,6 @@ def logout_view(request):
 
 class LoggedOutView(TemplateView):
     template_name = 'expenses/logged_out.html'
-
-
-class HomeView(LoginRequiredMixin, TemplateView):
-    template_name = 'expenses/home.html'
 
 
 class ExpenseListView(LoginRequiredMixin, FormView):
@@ -85,9 +82,11 @@ class ExpenseCreate(LoginRequiredMixin, FormView):
             logger.debug('caught integrity error')
             form.add_error(None, 'Duplicate data not allowed')
             return self.form_invalid(form)
-        self.success_url = reverse('expenses:result', args=(expense.pk,))
-        logger.info("ExpenseCreate success url:"+self.success_url)
-        return HttpResponseRedirect(self.success_url)
+        messages.success(
+            self.request,
+            "Expense: " + expense.description + ", was created sucessfully"
+        )
+        return HttpResponseRedirect(reverse('expenses:list'))
 
 #  Super call amended by Dave, from    get(self, request)
 #    def get(self, request):

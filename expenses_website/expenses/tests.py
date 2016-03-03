@@ -187,17 +187,17 @@ class LoginRequiredTests(TestCase):
         self.client = Client()
         self.user = User.objects.create_user('joy', 'joy@test.com', 'password')
 
-    def test_home_page_requires_login(self):
+    def test_list_page_requires_login(self):
         '''
-        The home page should not be displayed if the user is not logged in
+        The list page should not be displayed if the user is not logged in
         '''
-        response = self.client.get(reverse('expenses:home'))
+        response = self.client.get(reverse('expenses:list'))
         self.assertEqual(response.status_code, REDIRECT)
 
-    def test_home_page_logged_in(self):
+    def test_list_page_logged_in(self):
         '''
-        The home page should be displayed if the user is logged in
+        The list page should be displayed if the user is logged in
         '''
         self.client.login(username='joy', password='password')
-        response = self.client.get(reverse('expenses:home'))
+        response = self.client.get(reverse('expenses:list'))
         self.assertEqual(response.status_code, OK)

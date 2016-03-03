@@ -4,8 +4,7 @@ from . import views
 
 urlpatterns = [
     #  name used when calling reverse
-    url(r'^$', views.HomeView.as_view(), name='home'),
-    url(r'^list/$', views.ExpenseListView.as_view(), name='list'),
+    url(r'^$', views.ExpenseListView.as_view(), name='list'),
     url(r'^expense_form/$', views.ExpenseCreate.as_view(), name='create'),
     url(r'^category_form/$',
         views.CategoryCreate.as_view(),
