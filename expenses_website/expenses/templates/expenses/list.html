@@ -3,33 +3,36 @@
 {% block content %}
 <h1>Expenses List</h1>
 
-<br/>
-
 <body id="expenses_list">
 
 <form class="form-horizontal" action="" method="post">{% csrf_token %}
-    <div class="form-group{% if form.category_choices.errors %} has-error{% endif %}">
-        <div>
-            {{ form.category_choices.errors }}
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-offset-3 col-sm-2">
+                {% for error in form.category_choices.errors %}
+                <li class="text-danger">{{ error }}</li>
+                {% endfor %}
+            </div>
         </div>
-        <div>
-            <label class="col-sm-2 control-label" for="{{ form.category_choices.id_for_category_choices }}">Select categories:</label>
-            <div class="col-sm-8 checkbox">
-            {{ form.category_choices }}
+        <div class="row">
+            <div class="col-sm-offset-1 col-sm-2">
+                 <label class="control-label" for="{{ form.category_choices.id_for_category_choices }}">Select categories:</label>
+            </div>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                {{ form.category_choices }}
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="">
+                    <button class="btn btn-primary button_on_list" type="submit">
+                        <span class="glyphicon glyphicon-refresh"></span> Update List
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-8">
-            <button class="btn btn-primary" type="submit">
-                <span class="glyphicon glyphicon-refresh"></span> Update List
-            </button>
-        </div>
-    </div>
 </form>
-
-<br/>
-<br/>
 
 {% if recent_expenses_list %}
     <table border=2 class="table table-condensed table-striped">
