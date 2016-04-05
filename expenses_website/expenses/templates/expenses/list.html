@@ -3,35 +3,38 @@
 {% block content %}
 <h1>Expenses List</h1>
 
-<br/>
-
 <body id="expenses_list">
 
 <form class="form-horizontal" action="" method="post">{% csrf_token %}
-    <div class="form-group{% if form.category_choices.errors %} has-error{% endif %}">
-        <div>
-            {{ form.category_choices.errors }}
-        </div>
-        <div>
-            <label class="col-sm-2 control-label" for="{{ form.category_choices.id_for_category_choices }}">Select categories:</label>
-            <div class="col-sm-8 checkbox">
-            {{ form.category_choices }}
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-offset-3 col-sm-2">
+                {% for error in form.category_choices.errors %}
+                <li class="text-danger">{{ error }}</li>
+                {% endfor %}
             </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-8">
-            <button class="btn btn-primary" type="submit">
-                <span class="glyphicon glyphicon-refresh"></span> Update List
-            </button>
+        <div class="row">
+            <div class="col-sm-offset-1 col-sm-3">
+                 <label class="control-label" for="{{ form.category_choices.id_for_category_choices }}">Select categories to filter list:</label>
+            </div>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                {{ form.category_choices }}
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="">
+                    <button class="btn btn-primary button_on_list" type="submit">
+                        <span class="glyphicon glyphicon-refresh"></span> Update List
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </form>
 
-<br/>
-<br/>
-
-{% if recent_expenses_list %}
+{% if expenses_list %}
     <table border=2 class="table table-condensed table-striped">
         <tr>
             <th>User</th>
@@ -40,7 +43,7 @@
             <th>Item</th>
             <th>Price</th>
         </tr>
-    {% for expense in recent_expenses_list %}
+    {% for expense in expenses_list %}
         <tr>
             <td>{{ expense.user }}</td>
             <td>{{ expense.purchase_date }}</td>
@@ -50,8 +53,25 @@
         </tr>
     {% endfor %}
     </table>
+    <div class="pagination">
+    <span class="step-links">
+
+        {% if expenses_list.has_previous %}
+            <a href="?page={{ contacts.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ expenses_list.number }} of {{ expenses_list.paginator.num_pages }}
+        </span>
+
+        {% if expenses_list.has_next %}
+            <a href="?page={{ expenses_list.next_page_number }}">Next</a>
+        {% endif %}
+    </span>
+</div>
 {% else %}
-    <p class="lead">No expenses are available.</p>
+    <p class="lead">No expenses are available in selected categories.</p>
 {% endif %}
+
 </body>
 {% endblock %}

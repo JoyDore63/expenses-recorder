@@ -38,8 +38,8 @@ class FilterListForm(forms.Form):
             'id',
             'description'
         )
-        # Get just the pks for initial values => all checkboxes will be ticked
-        self.fields['category_choices'].initial = all_choices.values_list(
-            'id',
-            flat=True
-        )
+        # This enables the correct category choices to be ticked on the page
+        # Required because this method is called more than you think,
+        #  ie via view get_context_data
+        self.fields['category_choices'].initial = kwargs[
+            'initial']['categories']
